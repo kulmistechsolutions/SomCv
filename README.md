@@ -1,6 +1,8 @@
 # SomCv
 
-Build and deploy a professional **full-stack SaaS** (software-as-a-service) application with **WhatsApp-based subscriptions** and the **ChatGPT API**. 
+Build and deploy a professional **full-stack SaaS** (software-as-a-service) application with **WhatsApp-based subscriptions** and the **ChatGPT API**.
+
+> Updated: Next.js 15.5.12 - Security patch applied 
 
 Features:
 - Multi-step form using React Hook Form
