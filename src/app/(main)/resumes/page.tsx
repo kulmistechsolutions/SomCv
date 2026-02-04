@@ -1,7 +1,7 @@
 import { canCreateResume } from "@/lib/permissions";
 import prisma from "@/lib/prisma";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
-import { resumeDataInclude } from "@/lib/types";
+import { resumeDataInclude, ResumeServerData } from "@/lib/types";
 import { auth } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import CreateResumeButton from "./CreateResumeButton";
@@ -18,7 +18,7 @@ export default async function Page() {
     return null;
   }
 
-  let resumes: Awaited<ReturnType<typeof prisma.resume.findMany>> = [];
+  let resumes: ResumeServerData[] = [];
   let totalCount = 0;
   let subscriptionLevel: Awaited<ReturnType<typeof getUserSubscriptionLevel>> = "free";
 
