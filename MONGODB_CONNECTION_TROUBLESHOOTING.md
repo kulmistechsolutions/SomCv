@@ -65,7 +65,7 @@ If you're behind a corporate firewall or VPN:
 If `mongodb+srv://` doesn't work, try the standard format (requires specific port):
 
 ```
-mongodb://SOMCV:lMlGZJ6FLLFBe2JS@ac-vpscxnj-shard-00-00.jqkci9f.mongodb.net:27017,ac-vpscxnj-shard-00-01.jqkci9f.mongodb.net:27017,ac-vpscxnj-shard-00-02.jqkci9f.mongodb.net:27017/somcv?ssl=true&replicaSet=atlas-miv5wt-shard-0&authSource=admin&retryWrites=true&w=majority&appName=SOMCV
+mongodb://USERNAME:PASSWORD@shard-00-00.mongodb.net:27017,shard-00-01.mongodb.net:27017,shard-00-02.mongodb.net:27017/database?ssl=true&replicaSet=replica-set-name&authSource=admin&retryWrites=true&w=majority&appName=SOMCV
 ```
 
 ## Quick Fix Steps
