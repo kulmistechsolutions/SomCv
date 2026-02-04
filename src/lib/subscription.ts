@@ -33,7 +33,7 @@ export const getUserSubscriptionLevel = cache(
 
       // Default to free
       return "free";
-    } catch (error) {
+    } catch {
       // If database connection fails, default to free tier
       // This prevents the app from crashing when MongoDB is unavailable
       // Only log once to reduce console noise

@@ -20,7 +20,7 @@ export default async function Page() {
     subscription = await prisma.userSubscription.findUnique({
       where: { userId },
     });
-  } catch (error) {
+  } catch {
     // Database connection failed - continue with null subscription
     // getUserSubscriptionLevel will handle the error and return "free"
     if (process.env.NODE_ENV === "development") {

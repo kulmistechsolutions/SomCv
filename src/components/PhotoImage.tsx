@@ -44,7 +44,9 @@ export default function PhotoImage({
   };
 
   // Use regular img tag for blob URLs (File objects)
+  // Next.js Image doesn't support blob URLs, so we must use <img> here
   if (photo instanceof File) {
+    // eslint-disable-next-line @next/next/no-img-element
     return (
       <img
         src={photoSrc}

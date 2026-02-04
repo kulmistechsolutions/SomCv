@@ -1,103 +1,65 @@
-# Quick Deployment Steps
+# 🚀 Quick Deployment Guide - SomCV
 
-## Step 1: Install Vercel CLI
-```bash
-npm install -g vercel
+## Step 1: Complete Vercel Build ✅
+Your build is already in progress. Wait for it to complete.
+
+## Step 2: Set Environment Variables in Vercel
+
+Go to your Vercel project dashboard and add these environment variables:
+
+### Required Server Variables:
+```
+DATABASE_URL=your_mongodb_connection_string
+CLERK_SECRET_KEY=your_clerk_secret_key
+OPENAI_API_KEY=your_openai_api_key
+ADMIN_WHATSAPP_NUMBER=252613609678
 ```
 
-## Step 2: Login to Vercel
-```bash
-vercel login
+### Optional Server Variables:
 ```
-This will open your browser to authenticate.
-
-## Step 3: Deploy
-```bash
-vercel
+GOOGLE_AI_API_KEY=your_google_ai_api_key (optional)
+BLOB_READ_WRITE_TOKEN=your_vercel_blob_token (optional)
+ADMIN_USER_IDS=your_user_id_1,your_user_id_2 (optional)
 ```
 
-Follow the prompts:
-- Set up and deploy? **Yes**
-- Which scope? **Your account**
-- Link to existing project? **No** (first time)
-- Project name? **somcv** (or press Enter for default)
-- Directory? **./** (press Enter)
-- Override settings? **No** (press Enter)
-
-## Step 4: Add Environment Variables
-
-After first deployment, add your environment variables:
-
-```bash
-# Required Server Variables
-vercel env add DATABASE_URL
-vercel env add CLERK_SECRET_KEY
-vercel env add OPENAI_API_KEY
-vercel env add ADMIN_WHATSAPP_NUMBER
-
-# Optional Server Variables
-vercel env add GOOGLE_AI_API_KEY
-vercel env add BLOB_READ_WRITE_TOKEN
-vercel env add ADMIN_USER_IDS
-
-# Required Client Variables
-vercel env add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-vercel env add NEXT_PUBLIC_CLERK_SIGN_IN_URL
-vercel env add NEXT_PUBLIC_CLERK_SIGN_UP_URL
-vercel env add NEXT_PUBLIC_BASE_URL
+### Required Client Variables:
+```
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_BASE_URL=https://your-app.vercel.app
 ```
 
-For each variable, paste the value from your `.env` file.
+**⚠️ Important:** Replace `https://your-app.vercel.app` with your actual Vercel URL after first deployment!
 
-**Important:** For `NEXT_PUBLIC_BASE_URL`, wait until after first deployment, then use your Vercel URL:
-```
-https://your-app-name.vercel.app
-```
-
-## Step 5: Deploy to Production
-```bash
-vercel --prod
-```
-
-## Step 6: Update Clerk URLs
+## Step 3: Configure Clerk URLs
 
 1. Go to [Clerk Dashboard](https://dashboard.clerk.com)
-2. Navigate to your application
-3. Update these URLs to your Vercel URL:
-   - Frontend API: `https://your-app.vercel.app`
-   - Allowed Origins: `https://your-app.vercel.app`
-   - Redirect URLs: 
-     - `https://your-app.vercel.app/sign-in`
-     - `https://your-app.vercel.app/sign-up`
+2. Select your application
+3. Go to **Settings** → **Domains**
+4. Add your Vercel URL: `https://your-app.vercel.app`
+5. Update **Redirect URLs**:
+   - `https://your-app.vercel.app/sign-in`
+   - `https://your-app.vercel.app/sign-up`
 
-## Step 7: Update NEXT_PUBLIC_BASE_URL
+## Step 4: Verify MongoDB Access
 
-After you know your Vercel URL:
-```bash
-vercel env add NEXT_PUBLIC_BASE_URL production
-# Enter: https://your-actual-url.vercel.app
-```
+1. Go to [MongoDB Atlas](https://cloud.mongodb.com)
+2. **Network Access** → **Add IP Address**
+3. Add `0.0.0.0/0` to allow all IPs (or Vercel's IP ranges)
+4. Verify your `DATABASE_URL` is correct
 
-Then redeploy:
-```bash
-vercel --prod
-```
+## Step 5: Test Deployment
 
-## That's it! 🎉
+After deployment completes:
+- [ ] Visit your Vercel URL
+- [ ] Test sign-up/sign-in
+- [ ] Create a resume
+- [ ] Test AI features
+- [ ] Test PWA installation
 
-Your app should now be live at: `https://your-app.vercel.app`
+## Quick Links
 
-## Troubleshooting
-
-**Build fails?**
-- Check Vercel logs: `vercel logs`
-- Verify all environment variables are set
-- Make sure DATABASE_URL is accessible from internet
-
-**Database connection error?**
-- Check MongoDB IP whitelist (allow `0.0.0.0/0`)
-- Verify DATABASE_URL is correct
-
-**Clerk authentication not working?**
-- Update Clerk dashboard URLs
-- Verify NEXT_PUBLIC_BASE_URL matches your Vercel URL
+- **Vercel Dashboard**: https://vercel.com/dashboard
+- **Clerk Dashboard**: https://dashboard.clerk.com
+- **MongoDB Atlas**: https://cloud.mongodb.com

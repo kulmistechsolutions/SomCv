@@ -40,7 +40,7 @@ export default async function Page() {
       }),
       getUserSubscriptionLevel(userId),
     ]);
-  } catch (error) {
+  } catch {
     // Database connection failed - app will work with empty resume list
     // getUserSubscriptionLevel has its own error handling and will return "free"
     if (process.env.NODE_ENV === "development") {

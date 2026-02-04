@@ -23,6 +23,7 @@ export default function PWAInstallButton() {
     }
 
     // Check if running as PWA (iOS)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window.navigator as any).standalone === true) {
       setIsInstalled(true);
       return;
