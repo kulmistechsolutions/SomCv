@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate PNG Icons for PWA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #16a34a;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #e0f2fe;
+            border-left: 4px solid #0ea5e9;
+        }
+        .success {
+            background: #dcfce7;
+            border-left-color: #16a34a;
+        }
+        .error {
+            background: #fee2e2;
+            border-left-color: #ef4444;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 10px 5px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #15803d;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .icon-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .icon-item {
+            text-align: center;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        canvas {
+            display: none;
+        }
+        .instructions {
+            background: #fef3c7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #f59e0b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Generate PNG Icons for PWA</h1>
+        
+        <div class="instructions">
+            <strong>Instructions:</strong>
+            <ol>
+                <li>Click "Generate All PNG Icons" button below</li>
+                <li>All PNG icons will download automatically</li>
+                <li>Place all downloaded PNG files in the <code>public/</code> directory</li>
+                <li>Restart your dev server</li>
+                <li>The install prompt should now work!</li>
+            </ol>
+        </div>
+
+        <div id="status"></div>
+        
+        <button id="generateBtn" onclick="generateAllIcons()">
+            🎨 Generate All PNG Icons
+        </button>
+        
+        <div class="icon-preview" id="preview"></div>
+    </div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        let generatedCount = 0;
+
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+
+        function createSVG(size) {
+            return `<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
+                <rect width="${size}" height="${size}" fill="#16a34a" rx="${size * 0.1}"/>
+                <text x="${size/2}" y="${size/2}" font-family="Arial, sans-serif" font-size="${size * 0.4}" fill="white" text-anchor="middle" dominant-baseline="middle" font-weight="bold">SC</text>
+            </svg>`;
+        }
+
+        function svgToPng(svgString, size) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(svgBlob);
+                
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = size;
+                    canvas.height = size;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Draw white background first
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, size, size);
+                    
+                    // Draw the SVG image
+                    ctx.drawImage(img, 0, 0, size, size);
+                    
+                    canvas.toBlob((blob) => {
+                        URL.revokeObjectURL(url);
+                        if (blob) {
+                            resolve(blob);
+                        } else {
+                            reject(new Error('Failed to create blob'));
+                        }
+                    }, 'image/png', 1.0);
+                };
+                
+                img.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    reject(new Error('Failed to load SVG'));
+                };
+                
+                img.src = url;
+            });
+        }
+
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        async function generateAllIcons() {
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            generatedCount = 0;
+            
+            showStatus('🔄 Generating PNG icons...', 'info');
+            
+            try {
+                for (const size of sizes) {
+                    try {
+                        // Try to load existing SVG first
+                        let svgString;
+                        try {
+                            const response = await fetch(`/icon-${size}x${size}.svg`);
+                            if (response.ok) {
+                                svgString = await response.text();
+                            } else {
+                                throw new Error('SVG not found');
+                            }
+                        } catch {
+                            // Create SVG if file doesn't exist
+                            svgString = createSVG(size);
+                        }
+                        
+                        const pngBlob = await svgToPng(svgString, size);
+                        downloadBlob(pngBlob, `icon-${size}x${size}.png`);
+                        
+                        generatedCount++;
+                        showStatus(`✅ Generated ${generatedCount}/${sizes.length} icons...`, 'success');
+                        
+                        // Small delay to prevent browser blocking multiple downloads
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                    } catch (error) {
+                        console.error(`Error generating ${size}x${size}:`, error);
+                    }
+                }
+                
+                showStatus(
+                    `✅ Success! All ${sizes.length} PNG icons have been downloaded.<br><br>
+                    <strong>Next steps:</strong><br>
+                    1. Move all downloaded PNG files to the <code>public/</code> directory<br>
+                    2. Restart your dev server<br>
+                    3. Clear browser cache and reload<br>
+                    4. The install prompt should now appear!`,
+                    'success'
+                );
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // Show preview
+        sizes.forEach(size => {
+            const div = document.createElement('div');
+            div.className = 'icon-item';
+            div.innerHTML = `
+                <strong>${size}x${size}</strong><br>
+                <img src="/icon-${size}x${size}.svg" 
+                     onerror="this.src='data:image/svg+xml;base64,' + btoa('${createSVG(size).replace(/'/g, "\\'")}')"
+                     width="100" height="100" 
+                     style="margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
+            `;
+            document.getElementById('preview').appendChild(div);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate PWA Icons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #15803d;
+        }
+    </style>
+</head>
+<body>
+    <h1>PWA Icon Generator</h1>
+    <p>This tool generates PWA icons from the logo. Upload your logo image and click generate.</p>
+    
+    <input type="file" id="logoInput" accept="image/*">
+    <button onclick="generateIcons()">Generate Icons</button>
+    
+    <div id="canvases"></div>
+    
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        
+        function generateIcons() {
+            const input = document.getElementById('logoInput');
+            const file = input.files[0];
+            
+            if (!file) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const container = document.getElementById('canvases');
+                    container.innerHTML = '';
+                    
+                    sizes.forEach(size => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = size;
+                        canvas.height = size;
+                        canvas.id = `canvas-${size}`;
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Draw white background
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, size, size);
+                        
+                        // Calculate dimensions to fit image with padding
+                        const padding = size * 0.1;
+                        const imgSize = size - (padding * 2);
+                        
+                        // Draw image centered
+                        ctx.drawImage(img, padding, padding, imgSize, imgSize);
+                        
+                        container.appendChild(canvas);
+                        
+                        // Create download link
+                        canvas.toBlob(function(blob) {
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `icon-${size}x${size}.png`;
+                            a.textContent = `Download ${size}x${size}`;
+                            a.style.display = 'block';
+                            a.style.marginTop = '5px';
+                            container.appendChild(a);
+                        });
+                    });
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>

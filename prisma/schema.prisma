@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Resume {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String
+
+  title       String?
+  description String?
+
+  photoUrl    String?
+  colorHex    String  @default("#000000")
+  borderStyle String  @default("squircle")
+  template    String  @default("modern") // Template name: "modern", "classic", "creative", "minimal"
+  summary     String?
+  firstName   String?
+  lastName    String?
+  jobTitle    String?
+  city        String?
+  country     String?
+  phone       String?
+  email       String?
+
+  workExperiences WorkExperience[]
+  educations      Education[]
+  skills          String[]
+  hobbies         String[]
+  languages       Language[]
+  references      Reference[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("resumes")
+}
+
+model WorkExperience {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId String   @db.ObjectId
+
+  position    String?
+  company     String?
+  startDate   DateTime?
+  endDate     DateTime?
+  description String?
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("work_experiences")
+}
+
+model Education {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId String   @db.ObjectId
+
+  degree    String?
+  school    String?
+  startDate DateTime?
+  endDate   DateTime?
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("educations")
+}
+
+model Language {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId String   @db.ObjectId
+
+  name     String? // e.g., "English", "Spanish"
+  level    String? // e.g., "Native", "Fluent", "Intermediate", "Basic"
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("languages")
+}
+
+model Reference {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId String   @db.ObjectId
+
+  name         String?
+  jobTitle     String?
+  company      String?
+  phone        String?
+  email        String?
+  relationship String? // e.g., "Former Manager", "Colleague"
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("references")
+}
+
+model UserSubscription {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique
+  plan      String   // "free" | "pro" | "pro_plus"
+  status    String   @default("active") // "active" | "inactive"
+  expiresAt DateTime? // Optional expiration date for manual subscriptions
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_subscriptions")
+}
+
+model SubscriptionRequest {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String
+  fullName    String
+  phoneNumber String
+  plan        String   // "free" | "pro" | "pro_plus"
+  status      String   @default("pending") // "pending" | "approved" | "rejected"
+  requestId   String   @unique // Unique request ID for WhatsApp message
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscription_requests")
+}
