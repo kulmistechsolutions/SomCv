@@ -31,66 +31,78 @@ import Link from "next/link";
 export default function Home() {
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gray-100 px-5 py-12 text-center text-gray-900 md:flex-row md:text-start lg:gap-12">
-        <div className="max-w-prose space-y-3">
-          <Image
-            src={logo}
-            alt="Logo"
-            width={150}
-            height={150}
-            className="mx-auto md:ms-0"
-          />
-          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-            Create the{" "}
-            <span className="inline-block bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">
-              Perfect Resume
-            </span>{" "}
-            in Minutes
-          </h1>
-          <p className="text-lg text-gray-500">
-            SOMCV helps you
-            design a professional resume with AI assistance.
-          </p>
-          <Button asChild size="lg" variant="premium">
-            <Link href="/resumes">Get started</Link>
-          </Button>
+      <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-gradient-to-br from-gray-50 via-white to-gray-100 px-5 py-16 text-center md:flex-row md:items-center md:justify-between md:gap-12 md:px-8 md:text-left lg:px-12">
+        <div className="flex w-full flex-col items-center space-y-6 md:w-1/2 md:items-start md:space-y-8">
+          <div className="flex items-center justify-center md:justify-start">
+            <Image
+              src={logo}
+              alt="Logo"
+              width={150}
+              height={150}
+              className="h-auto w-auto"
+              priority
+            />
+          </div>
+          <div className="space-y-4">
+            <h1 className="scroll-m-20 text-4xl font-extrabold leading-tight tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
+              Create the{" "}
+              <span className="inline-block bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">
+                Perfect Resume
+              </span>{" "}
+              in Minutes
+            </h1>
+            <p className="mx-auto max-w-md text-lg leading-relaxed text-gray-600 md:mx-0 md:text-xl">
+              SOMCV helps you design a professional resume with AI assistance.
+            </p>
+          </div>
+          <div className="flex w-full justify-center md:justify-start">
+            <Button asChild size="lg" variant="premium" className="w-full sm:w-auto">
+              <Link href="/resumes">Get started</Link>
+            </Button>
+          </div>
         </div>
-        <div>
-          <Image
-            src={resumePreview}
-            alt="Resume preview"
-            width={600}
-            className="shadow-md lg:rotate-[1.5deg]"
-          />
+        <div className="flex w-full items-center justify-center md:w-1/2">
+          <div className="relative">
+            <Image
+              src={resumePreview}
+              alt="Resume preview"
+              width={600}
+              height={800}
+              className="w-full max-w-lg rounded-lg shadow-2xl transition-transform hover:scale-105 lg:rotate-[1.5deg]"
+              priority
+            />
+          </div>
         </div>
       </main>
 
       {/* New Sections Below Hero */}
-      <div className="bg-gradient-to-b from-gray-50 to-white">
-        <div className="mx-auto max-w-7xl space-y-20 px-5 py-16">
+      <div className="bg-gradient-to-b from-white to-gray-50">
+        <div className="mx-auto max-w-7xl space-y-24 px-5 py-20 md:px-8 lg:px-12">
           {/* About SomCV Section */}
-          <section className="space-y-6 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-green-600 shadow-lg">
-              <FileText className="size-8 text-white" />
+          <section className="space-y-8 text-center">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-green-600 shadow-xl">
+              <FileText className="size-10 text-white" />
             </div>
-            <h2 className="scroll-m-20 text-4xl font-bold tracking-tight">
-              About <span className="bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">SomCV</span>
-            </h2>
-            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-600">
-              SomCV is an AI-powered resume builder designed to help users
-              create professional, job-ready resumes in minutes. It simplifies
-              resume creation with guided steps, smart suggestions, and modern
-              templates.
-            </p>
+            <div className="space-y-4">
+              <h2 className="scroll-m-20 text-4xl font-bold tracking-tight md:text-5xl">
+                About <span className="bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">SomCV</span>
+              </h2>
+              <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-600 md:text-xl">
+                SomCV is an AI-powered resume builder designed to help users
+                create professional, job-ready resumes in minutes. It simplifies
+                resume creation with guided steps, smart suggestions, and modern
+                templates.
+              </p>
+            </div>
           </section>
 
           {/* How SomCV Helps You Section */}
-          <section className="space-y-10">
-            <div className="text-center">
-              <h2 className="scroll-m-20 text-4xl font-bold tracking-tight">
+          <section className="space-y-12">
+            <div className="space-y-3 text-center">
+              <h2 className="scroll-m-20 text-4xl font-bold tracking-tight md:text-5xl">
                 How <span className="bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">SomCV</span> Helps You
               </h2>
-              <p className="mt-2 text-gray-600">Everything you need to create the perfect resume</p>
+              <p className="text-lg text-gray-600 md:text-xl">Everything you need to create the perfect resume</p>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <Card className="group border-2 transition-all hover:border-green-500/50 hover:shadow-xl">
@@ -163,12 +175,12 @@ export default function Home() {
           </section>
 
           {/* Key Features Section */}
-          <section className="space-y-10">
-            <div className="text-center">
-              <h2 className="scroll-m-20 text-4xl font-bold tracking-tight">
+          <section className="space-y-12">
+            <div className="space-y-3 text-center">
+              <h2 className="scroll-m-20 text-4xl font-bold tracking-tight md:text-5xl">
                 Key <span className="bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">Features</span>
               </h2>
-              <p className="mt-2 text-gray-600">Powerful tools to build your perfect resume</p>
+              <p className="text-lg text-gray-600 md:text-xl">Powerful tools to build your perfect resume</p>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <Card className="group border-2 transition-all hover:border-green-500/50 hover:shadow-xl">
@@ -270,15 +282,17 @@ export default function Home() {
           </section>
 
           {/* Contact Us Section */}
-          <section className="space-y-8">
-            <div className="text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-green-600 shadow-lg">
-                <MessageCircle className="size-8 text-white" />
+          <section className="space-y-10">
+            <div className="space-y-4 text-center">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-green-600 shadow-xl">
+                <MessageCircle className="size-10 text-white" />
               </div>
-              <h2 className="mt-4 scroll-m-20 text-4xl font-bold tracking-tight">
-                Contact <span className="bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">Us</span>
-              </h2>
-              <p className="mt-2 text-gray-600">Get in touch with us anytime</p>
+              <div className="space-y-2">
+                <h2 className="scroll-m-20 text-4xl font-bold tracking-tight md:text-5xl">
+                  Contact <span className="bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">Us</span>
+                </h2>
+                <p className="text-lg text-gray-600 md:text-xl">Get in touch with us anytime</p>
+              </div>
             </div>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button
